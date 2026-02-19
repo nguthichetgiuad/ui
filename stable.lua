@@ -370,28 +370,35 @@ Library.Create = function(_, LibraryOptions)
 		PaddingTop = UDim.new(0, 6)
 	})
 
-	--tabs tween
-	-- [TABS TWEEN]
+	-- [TABS TWEEN & OPEN ANIMATION]
 Tabs.ChildAdded:Connect(function(Child)
-    -- Đảm bảo tab mới hiện ra mượt mà
     if Child:IsA("GuiObject") then
-        TS:Create(Child, TI(0.3), {BackgroundTransparency = 0}):Play()
+        task.spawn(function()
+            local NameLabel = Child:WaitForChild("NameLabel", 5)
+            if NameLabel then
+                TS:Create(NameLabel, TI(0.15), {TextTransparency = 0}):Play()
+            end
+        end)
     end
 end)
 
--- [OPEN ANIMATION]
--- Phóng to MainFrame khi mới chạy script
-MainFrame.Size = UDim2.new(0, 0, 0, 0)
+-- Hiển thị MainFrame ngay lập tức
 MainFrame.Visible = true
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
 TS:Create(MainFrame, TI(0.3), {Size = LibraryOptions.Size}):Play()
+
 task.wait(0.3)
 TS:Create(Tabs, TI(0.3), {Size = UDim2.new(0, 100, 1, 0)}):Play()
 
-local UIToggleState = true
-
 -- [HỆ THỐNG ĐÓNG/MỞ UI]
-UIS.InputBegan:Connect(function(input, gameProcessed)
-    -- gameProcessed giúp tránh việc UI ẩn khi bạn đang chat
+local UIToggleState = true
+UIS.InputBegan:Connect(function(input, processed)
+    if not processed and input.KeyCode == Enum.KeyCode.RightControl then
+        UIToggleState = not UIToggleState
+        MainFrame.Visible = UIToggleState
+    end
+end)
+
     if not gameProcessed and input.KeyCode == Enum.KeyCode.RightControl then
         UIToggleState = not UIToggleState
         MainFrame.Visible = UIToggleState
