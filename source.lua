@@ -285,14 +285,60 @@ Library.Create = function(_, LibraryOptions)
 
 	local MainFrame = self:Object("Frame", {
 		Name = "MainFrame",
-		Parent = Gui,
+		Parent = ScreenGui,
 		AnchorPoint = Vector2.new(0.5, 0.5),
 		BackgroundTransparency = 1,
 		Position = UDim2.new(0.5, 0, 0.5, 0),
 		Size = UDim2.new(0, 0, 0, 0)
 	})
 
-	AddDragger(MainFrame)
+	--// HÀM KÉO THẢ THÔNG MINH - CHỐNG LIỆT NÚT //--
+local function SolveDrag(dragFrame, dragHandle)
+    local dragging, dragInput, dragStart, startPos
+    dragHandle = dragHandle or dragFrame
+
+    dragHandle.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            -- Kiểm tra xem có đang bấm trúng nút nào không
+            local objects = game:GetService("CoreGui"):GetGuiObjectsAtPosition(input.Position.X, input.Position.Y)
+            local hitButton = false
+            for _, obj in pairs(objects) do
+                if obj:IsA("TextButton") or obj:IsA("ImageButton") then
+                    hitButton = true
+                    break
+                end
+            end
+            
+            if not hitButton then
+                dragging = true
+                dragStart = input.Position
+                startPos = dragFrame.Position
+            end
+        end
+    end)
+
+    dragHandle.InputChanged:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch then
+            dragInput = input
+        end
+    end)
+
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
+        if input == dragInput and dragging then
+            local delta = input.Position - dragStart
+            dragFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+
+    dragHandle.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+end
+
+-- Kích hoạt cho MainFrame (Sử dụng Header làm tay cầm)
+SolveDrag(MainFrame, MainFrame) 
 
 	self:Object("Shadow", MainFrame)
 
