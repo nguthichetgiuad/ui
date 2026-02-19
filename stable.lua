@@ -371,24 +371,32 @@ Library.Create = function(_, LibraryOptions)
 	})
 
 	--tabs tween
-	Tabs.ChildAdded:connect(function(Child)
-		TS:Create(Child:WaitForChild("NameLabel"), TI(0.2), {TextTransparency = 0}):Play()
-	end)
+	-- [TABS TWEEN]
+Tabs.ChildAdded:Connect(function(Child)
+    -- Đảm bảo tab mới hiện ra mượt mà
+    if Child:IsA("GuiObject") then
+        TS:Create(Child, TI(0.3), {BackgroundTransparency = 0}):Play()
+    end
+end)
 
-	--open animation
-	TS:Create(MainFrame, TI(0.3), {Size = LibraryOptions.Size}):Play()
-	wait(0.3)
-	TS:Create(Tabs, TI(0.3), {Size = UDim2.new(0, 100, 1, 0)}):Play()
-	local UIToggleState = true
+-- [OPEN ANIMATION]
+-- Phóng to MainFrame khi mới chạy script
+MainFrame.Size = UDim2.new(0, 0, 0, 0)
+MainFrame.Visible = true
+TS:Create(MainFrame, TI(0.3), {Size = LibraryOptions.Size}):Play()
+task.wait(0.3)
+TS:Create(Tabs, TI(0.3), {Size = UDim2.new(0, 100, 1, 0)}):Play()
 
-		-- [HỆ THỐNG ĐÓNG/MỞ UI]
-	UIS.InputBegan:Connect(function(Input)
-		if Input.KeyCode == Enum.KeyCode.RightControl then
-			UIToggleState = not UIToggleState
-			-- Dùng Visible là cách an toàn nhất, mượt nhất cho Mobile/PC
-			MainFrame.Visible = UIToggleState
-		end
-	end)
+local UIToggleState = true
+
+-- [HỆ THỐNG ĐÓNG/MỞ UI]
+UIS.InputBegan:Connect(function(input, gameProcessed)
+    -- gameProcessed giúp tránh việc UI ẩn khi bạn đang chat
+    if not gameProcessed and input.KeyCode == Enum.KeyCode.RightControl then
+        UIToggleState = not UIToggleState
+        MainFrame.Visible = UIToggleState
+    end
+end)
 
 	local TabsLibrary = {}
 
