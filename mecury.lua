@@ -28,22 +28,37 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 -- Ta chèn code do gemini generate ra
-_G.MakeDraggableMobile = function(frame)
-    local dragging, dragStart, startPos
-    frame.InputBegan:Connect(function(input)
-        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
-            dragging = true
-            dragStart = input.Position
-            startPos = frame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+_G.MakeDraggableMobile = function()
+    task.spawn(function()
+        -- Tự động tìm cái khung chính tên là "main" trong Library
+        -- Nếu không có frame truyền vào, nó sẽ tự tìm trong cấu trúc UI
+        local frame = game:GetService("CoreGui"):FindFirstChild("Mercury") or game:GetService("Players").LocalPlayer.PlayerGui:FindFirstChild("Mercury")
+        
+        -- Nếu bạn đang sửa trực tiếp trong file, hãy dùng biến 'main' có sẵn
+        local target = main -- Biến main này luôn tồn tại ở dòng 667
+        
+        if target then
+            local dragging, dragStart, startPos
+            target.InputBegan:Connect(function(input)
+                if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+                    dragging = true
+                    dragStart = input.Position
+                    startPos = target.Position
+                end
             end)
-        end
-    end)
-    game:GetService("UserInputService").InputChanged:Connect(function(input)
-        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local delta = input.Position - dragStart
-            frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+            
+            game:GetService("UserInputService").InputChanged:Connect(function(input)
+                if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+                    local delta = input.Position - dragStart
+                    target.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+                end
+            end)
+
+            game:GetService("UserInputService").InputEnded:Connect(function(input)
+                if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+                    dragging = false
+                end
+            end)
         end
     end)
 end
@@ -663,9 +678,8 @@ function Library:create(options)
 		ScaleType = Enum.ScaleType.Slice,
 		SliceScale = 1
 	})
-	 shadow.Active = true
-    if _G.MakeDraggableMobile then
-        _G.MakeDraggableMobile(main)
+	 if _G.MakeDraggableMobile then
+        _G.MakeDraggableMobile() 
 	end
 	local content = core:object("Frame", {
 		Theme = {BackgroundColor3 = {"Secondary", -10}},
