@@ -196,12 +196,14 @@ DRR["1a"]["BackgroundColor3"] = Color3.fromRGB(255, 255, 255);
 DRR["1a"]["FontFace"] = Font.new([[rbxassetid://11702779517]], Enum.FontWeight.SemiBold, Enum.FontStyle.Normal);
 DRR["1a"]["TextSize"] = 14;
 DRR["1a"]["TextColor3"] = Color3.fromRGB(255, 255, 255);
-DRR["1a"]["AutomaticSize"] = Enum.AutomaticSize.X;
-DRR["1a"]["Size"] = UDim2.new(0.33195531368255615, 0, 0.41530051827430725, 0);
+-- DRR["1a"]["AutomaticSize"] = Enum.AutomaticSize.X;
+DRR["1a"]["TextXAlignment"] = Enum.TextXAlignment.Center; -- Căn giữa ngang
+DRR["1a"]["TextYAlignment"] = Enum.TextYAlignment.Center; -- Căn giữa dọc
+DRR["1a"]["Size"] = UDim2.new(1, 0, 1, 0); -- Phủ kín 100% khung Clock
 DRR["1a"]["BorderColor3"] = Color3.fromRGB(0, 0, 0);
 DRR["1a"]["Text"] = [[00:00]];
 DRR["1a"]["BackgroundTransparency"] = 1;
-DRR["1a"]["Position"] = UDim2.new(0.21512815356254578, 0, 0.27320244908332825, 0);
+DRR["1a"]["Position"] = UDim2.new(0, 0, 0, 0); -- Bắt đầu từ góc 0,0
 
 -- DrRay.TopBar.ProfileMenu.Title
 DRR["1b"] = Instance.new("ImageButton", DRR["c"]);
