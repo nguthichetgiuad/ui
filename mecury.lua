@@ -665,7 +665,7 @@ function Library:create(options)
 	})
 	 shadow.Active = true
     if _G.MakeDraggableMobile then
-        _G.MakeDraggableMobile(shadowHolder)
+        _G.MakeDraggableMobile(main)
 	end
 	local content = core:object("Frame", {
 		Theme = {BackgroundColor3 = {"Secondary", -10}},
