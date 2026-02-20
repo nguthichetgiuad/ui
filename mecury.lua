@@ -28,7 +28,7 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 -- Ta chèn code do gemini generate ra
-function Library:MakeDraggable(frame)
+_G.MakeDraggableMobile = function(frame)
     local dragging, dragStart, startPos
     frame.InputBegan:Connect(function(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
@@ -664,7 +664,9 @@ function Library:create(options)
 		SliceScale = 1
 	})
 	 shadow.Active = true
-    Library:MakeDraggable(shadowHolder)
+    if _G.MakeDraggableMobile then
+        _G.MakeDraggableMobile(shadowHolder)
+	end
 	local content = core:object("Frame", {
 		Theme = {BackgroundColor3 = {"Secondary", -10}},
 		AnchorPoint = Vector2.new(0.5, 1),
