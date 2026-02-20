@@ -1,3 +1,25 @@
+-- [DÁN VÀO DÒNG 1 CỦA FILE MECURY.LUA]
+local UIS = game:GetService("UserInputService")
+_G.MakeMercuryDraggable = function(Frame)
+    local dragStart, startPos, dragging
+    Frame.InputBegan:Connect(function(input)
+        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
+            dragging = true
+            dragStart = input.Position
+            startPos = Frame.Position
+            input.Changed:Connect(function()
+                if input.UserInputState == Enum.UserInputState.End then dragging = false end
+            end)
+        end
+    end)
+    UIS.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local delta = input.Position - dragStart
+            Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
+        end
+    end)
+end
+-- [HẾT ĐOẠN DÁN - BÊN DƯỚI LÀ CODE CŨ CỦA BẠN]
 local TweenService = game:GetService("TweenService")
 local RunService = game:GetService("RunService")
 local UserInputService = game:GetService("UserInputService")
@@ -3538,37 +3560,3 @@ return setmetatable(Library, {
 		return rawget(Library, i:lower())
 	end
 })
--- [Dán vào cuối cùng file mercury.lua]
-local UIS = game:GetService("UserInputService")
-local function SuperDragger(Frame)
-    local dragStart, startPos, dragging
-    Frame.InputBegan:Connect(function(input)
-        if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
-            dragging = true
-            dragStart = input.Position
-            startPos = Frame.Position
-            input.Changed:Connect(function()
-                if input.UserInputState == Enum.UserInputState.End then dragging = false end
-            end)
-        end
-    end)
-    UIS.InputChanged:Connect(function(input)
-        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
-            local delta = input.Position - dragStart
-            Frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
-        end
-    end)
-end
-
--- Tự động áp dụng cho khung chính của Mercury
-for _, v in pairs(game:GetService("CoreGui"):GetChildren()) do
-    if v:IsA("ScreenGui") and v:FindFirstChild("MainFrame") then
-        SuperDragger(v.MainFrame)
-    end
-end
--- Hoặc nếu bạn dùng PlayerGui:
-for _, v in pairs(game.Players.LocalPlayer.PlayerGui:GetChildren()) do
-    if v:IsA("ScreenGui") and v:FindFirstChild("MainFrame") then
-        SuperDragger(v.MainFrame)
-    end
-end
