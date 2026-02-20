@@ -28,7 +28,7 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 -- Ta chèn code do gemini generate ra
-function MakeDraggable(frame)
+function Library:MakeDraggable(frame)
     local dragging, dragStart, startPos
     frame.InputBegan:Connect(function(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
@@ -40,7 +40,7 @@ function MakeDraggable(frame)
             end)
         end
     end)
-    UserInputService.InputChanged:Connect(function(input) -- Dùng biến chuẩn ở line 25
+    game:GetService("UserInputService").InputChanged:Connect(function(input)
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
             frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
@@ -662,12 +662,9 @@ function Library:create(options)
 		SliceCenter = Rect.new(47, 47, 450, 450),
 		ScaleType = Enum.ScaleType.Slice,
 		SliceScale = 1
-		-- Làm thế này để cửa sổ có thể moveable
-		shadow.Active = true
-        MakeDraggable(shadowHolder)
-	    -- Hết 
 	})
-
+	 shadow.Active = true
+    Library:MakeDraggable(shadowHolder)
 	local content = core:object("Frame", {
 		Theme = {BackgroundColor3 = {"Secondary", -10}},
 		AnchorPoint = Vector2.new(0.5, 1),
