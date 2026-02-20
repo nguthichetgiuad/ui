@@ -663,6 +663,10 @@ function Library:create(options)
 		SliceCenter = Rect.new(47, 47, 450, 450),
 		ScaleType = Enum.ScaleType.Slice,
 		SliceScale = 1
+		-- Làm thế này để cửa sổ có thể moveable
+		shadow.Active = true
+        MakeDraggable(shadowHolder)
+	    -- Hết 
 	})
 
 	local content = core:object("Frame", {
