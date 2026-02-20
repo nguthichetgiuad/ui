@@ -29,7 +29,6 @@ local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 -- Ta chèn code do gemini generate ra
 local function MakeDraggable(frame)
-    local UIS = game:GetService("UserInputService")
     local dragging, dragStart, startPos
     frame.InputBegan:Connect(function(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
@@ -41,7 +40,7 @@ local function MakeDraggable(frame)
             end)
         end
     end)
-    UIS.InputChanged:Connect(function(input)
+    UserInputService.InputChanged:Connect(function(input) -- Dùng biến chuẩn ở line 25
         if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
             local delta = input.Position - dragStart
             frame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + delta.X, startPos.Y.Scale, startPos.Y.Offset + delta.Y)
