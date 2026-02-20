@@ -28,7 +28,7 @@ local LocalPlayer = Players.LocalPlayer
 local Mouse = LocalPlayer:GetMouse()
 local HTTPService = game:GetService("HttpService")
 -- Ta chèn code do gemini generate ra
-local function MakeDraggable(frame)
+function MakeDraggable(frame)
     local dragging, dragStart, startPos
     frame.InputBegan:Connect(function(input)
         if (input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch) then
